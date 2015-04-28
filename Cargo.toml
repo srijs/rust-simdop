@@ -2,6 +2,9 @@
 name = "simdop"
 version = "0.1.0"
 authors = ["Sam Rijs <srijs@airpost.net>"]
+description = "SIMD operations for Rust, with traits and pixiedust"
+repository = "https://github.com/srijs/rust-simdop"
+license = "MIT"
 
 [dependencies]
 llvmint = "0.0.2"
