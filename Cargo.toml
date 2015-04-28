@@ -1,0 +1,8 @@
+[package]
+name = "simdop"
+version = "0.1.0"
+authors = ["Sam Rijs <srijs@airpost.net>"]
+
+[dependencies]
+llvmint = "0.0.2"
+simdty = "0.0.3"
