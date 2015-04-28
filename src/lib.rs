@@ -1,13 +1,37 @@
-#[derive(Debug, Copy, Clone)]
-pub struct Twice<N>(N,N);
+pub mod core {
 
-pub trait Half {
-  type Half;
+  #[derive(Debug, Copy, Clone)]
+  pub struct Twice<N> {
+    pub lo: N,
+    pub hi: N
+  }
+
+  pub trait Half {
+    type Half;
+  }
+
+  impl<N> Half for Twice<N> {
+    type Half = N;
+  }
+
+  pub trait ElemTwice {
+    type ElemTwice;
+  }
+
+  impl ElemTwice for Twice<Twice<i32>> {
+    type ElemTwice = Twice<i64>;
+  }
+
+  pub trait Multi {
+    type Elem;
+    type Repr;
+    fn wrap(Self::Repr) -> Self;
+    fn unwrap(self) -> Self::Repr;
+  }
+
 }
 
-impl<N> Half for Twice<N> {
-  type Half = N;
-}
+use self::core::*;
 
 pub type M2<N> = Twice<N>;
 pub type M4<N> = Twice<M2<N>>;
@@ -15,43 +39,32 @@ pub type M8<N> = Twice<M4<N>>;
 pub type M16<N> = Twice<M8<N>>;
 pub type M32<N> = Twice<M16<N>>;
 
-pub trait ElemTwice {
-  type ElemTwice;
+pub trait Set1<M: Multi> {
+  fn set1(&self, M::Elem) -> M;
 }
 
-impl ElemTwice for M4<i32> {
-  type ElemTwice = M2<i64>;
+pub trait Add<M: Multi> {
+  fn add(&self, M, M) -> M;
 }
 
-pub trait Multi {
-  type Elem;
-  type Repr;
-  fn wrap(Self::Repr) -> Self;
-  fn unwrap(self) -> Self::Repr;
+pub trait Shli<M: Multi> {
+  fn shli(&self, M, i32) -> M;
 }
 
-pub trait Set1: Multi {
-  fn set1(Self::Elem) -> Self;
+pub trait Shri<M: Multi> {
+  fn shri(&self, M, i32) -> M;
 }
 
-pub trait Add: Multi {
-  fn add(self, Self) -> Self;
+pub trait Mullo<M: Multi + ElemTwice> {
+  fn mullo(&self, M, M) -> M::ElemTwice;
 }
 
-pub trait Shli: Multi {
-  fn shli(self, i32) -> Self;
-}
+pub mod arch {
 
-pub trait Shri: Multi {
-  fn shri(self, i32) -> Self;
-}
+  enum Token { Token }
 
-pub trait Mullo: Multi + ElemTwice {
-  fn mullo(self, Self) -> Self::ElemTwice;
-}
+  pub struct X86(Token);
 
-pub fn set1<M: Set1>(e: M::Elem) -> M {
-  Set1::set1(e)
-}
+  pub mod x86;
 
-pub mod x86;
+}
