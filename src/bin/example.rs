@@ -1,11 +1,12 @@
 extern crate simdop;
+extern crate simdty;
+extern crate llvmint;
 
 use simdop::*;
 
 fn main() {
 
-  let x86 = arch::X86::detect().unwrap();
-  let sse2 = arch::x86::SSE2::detect(x86).unwrap();
+  let sse2 = arch::x86::SSE2::detect().unwrap();
 
   let m1: M2<i64> = sse2.set1(1);
   let m2: M2<i64> = sse2.set1(2);

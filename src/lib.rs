@@ -25,6 +25,8 @@
 //! When combining vector operations, the compiler is able to perform "deforestation"
 //! optimisations on the data structures, elminating most of the structural overhead. 
 
+extern crate simdty;
+
 /// Core data structures and traits.
 pub mod core {
 
@@ -72,6 +74,60 @@ pub type M16<N> = Twice<M8<N>>;
 /// A vector of 32 elements of type `N`.
 pub type M32<N> = Twice<M16<N>>;
 
+impl Multi for M2<i64> {
+  type Elem = i64;
+  type Repr = simdty::i64x2;
+#[inline(always)]
+  fn wrap(s: Self::Repr) -> Self {
+    Twice{lo: s.0, hi: s.1}
+  }
+#[inline(always)]
+  fn unwrap(self) -> Self::Repr {
+    simdty::i64x2(self.lo, self.hi)
+  }
+}
+
+impl Multi for M4<i32> {
+  type Elem = i32;
+  type Repr = simdty::i32x4;
+#[inline(always)]
+  fn wrap(s: Self::Repr) -> Self {
+    Twice{
+      lo: Twice{lo: s.0, hi: s.1},
+      hi: Twice{lo: s.2, hi: s.3}
+    }
+  }
+#[inline(always)]
+  fn unwrap(self) -> Self::Repr {
+    simdty::i32x4(self.lo.lo, self.lo.hi, self.hi.lo, self.hi.hi)
+  }
+}
+
+impl Multi for M8<i16> {
+  type Elem = i16;
+  type Repr = simdty::i16x8;
+#[inline(always)]
+  fn wrap(s: Self::Repr) -> Self {
+    Twice{
+      lo: Twice{
+        lo: Twice{lo: s.0, hi: s.1},
+        hi: Twice{lo: s.2, hi: s.3},
+      },
+      hi: Twice{
+        lo: Twice{lo: s.4, hi: s.5},
+        hi: Twice{lo: s.6, hi: s.7}
+      }
+    }
+  }
+#[inline(always)]
+  fn unwrap(self) -> Self::Repr {
+    simdty::i16x8(
+      self.lo.lo.lo, self.lo.lo.hi, self.lo.hi.lo, self.lo.hi.hi,
+      self.hi.lo.lo, self.hi.lo.hi, self.hi.hi.lo, self.hi.hi.hi
+    )
+  }
+}
+
 /// The `Set1` trait is used to specify broadcasting functionality.
 pub trait Set1<M: Multi> {
 /// Broadcasts `e` to all elements of the vector.
@@ -107,8 +163,10 @@ pub mod arch {
 
   enum Token { Token }
 
-  pub struct X86(Token);
-
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
   pub mod x86;
+
+#[cfg(target_arch = "arm")]
+  pub mod arm;
 
 }

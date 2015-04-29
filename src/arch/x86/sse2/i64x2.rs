@@ -1,22 +1,8 @@
-extern crate simdty;
 extern crate llvmint;
 
 use super::super::SSE2;
 use super::super::super::super::*;
 use super::super::super::super::core::*;
-
-impl Multi for M2<i64> {
-  type Elem = i64;
-  type Repr = simdty::i64x2;
-#[inline(always)]
-  fn wrap(s: Self::Repr) -> Self {
-    Twice{lo: s.0, hi: s.1}
-  }
-#[inline(always)]
-  fn unwrap(self) -> Self::Repr {
-    simdty::i64x2(self.lo, self.hi)
-  }
-}
 
 impl Set1<M2<i64>> for SSE2 {
 #[inline(always)]
