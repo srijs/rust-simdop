@@ -55,12 +55,3 @@ impl Shri<M4<i32>> for SSE2 {
     }
   }
 }
-
-impl Mullo<M4<i32>> for SSE2 {
-#[inline(always)]
-  fn mullo(&self, a: M4<i32>, b: M4<i32>) -> M2<i64> {
-    unsafe {
-      Multi::wrap(llvmint::x86::sse2_pmulu_dq(a.unwrap(), b.unwrap()))
-    }
-  }
-}
