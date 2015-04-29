@@ -18,5 +18,8 @@ impl SSSE3 {
   }
 }
 
+#[cfg(feature = "sse2")]
 pub mod sse2;
+
+#[cfg(feature = "ssse3")]
 pub mod ssse3;

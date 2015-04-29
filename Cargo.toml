@@ -6,6 +6,11 @@ description = "SIMD operations for Rust, with traits and pixiedust"
 repository = "https://github.com/srijs/rust-simdop"
 license = "MIT"
 
+[features]
+default = ["sse2"]
+sse2 = []
+ssse3 = []
+
 [dependencies]
 llvmint = "0.0.2"
 simdty = "0.0.3"
