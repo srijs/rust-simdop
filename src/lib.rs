@@ -153,9 +153,15 @@ pub trait Shri<M: Multi> {
 }
 
 /// The `Mullo` trait is used to specify low element-wise multiplication functionality.
-pub trait Mullo<M: Multi + ElemTwice> {
+pub trait Mullo<M: Multi> {
 /// Multiplies the elements in `a` and `b` and stores the lower halves of the results.
-  fn mullo(&self, a: M, b: M) -> M::ElemTwice;
+  fn mullo(&self, a: M, b: M) -> M;
+}
+
+/// The `Mulhi` trait is used to specify high element-wise multiplication functionality.
+pub trait Mulhi<M: Multi> {
+/// Multiplies the elements in `a` and `b` and stores the higher halves of the results.
+  fn mulhi(&self, a: M, b: M) -> M;
 }
 
 /// CPU identification and feature detection, as well as trait implementations.

@@ -44,3 +44,19 @@ impl Shri<M8<i16>> for SSE2 {
     }
   }
 }
+
+impl Mullo<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn mullo(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    Multi::wrap(a.unwrap() * b.unwrap())
+  }
+}
+
+impl Mulhi<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn mulhi(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_pmulh_w(a.unwrap(), b.unwrap()))
+    }
+  }
+}
