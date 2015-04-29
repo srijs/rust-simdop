@@ -128,6 +128,45 @@ impl Multi for M8<i16> {
   }
 }
 
+impl Multi for M16<i8> {
+  type Elem = i8;
+  type Repr = simdty::i8x16;
+#[inline(always)]
+  fn wrap(s: Self::Repr) -> Self {
+    Twice{
+      lo: Twice{
+        lo: Twice{
+          lo: Twice{lo: s.0, hi: s.1},
+          hi: Twice{lo: s.2, hi: s.3},
+        },
+        hi: Twice{
+          lo: Twice{lo: s.4, hi: s.5},
+          hi: Twice{lo: s.6, hi: s.7},
+        }
+      },
+      hi: Twice{
+        lo: Twice{
+          lo: Twice{lo: s.8, hi: s.9},
+          hi: Twice{lo: s.10, hi: s.11}
+        },
+        hi: Twice{
+          lo: Twice{lo: s.12, hi: s.13},
+          hi: Twice{lo: s.14, hi: s.15}
+        }
+      }
+    }
+  }
+#[inline(always)]
+  fn unwrap(self) -> Self::Repr {
+    simdty::i8x16(
+      self.lo.lo.lo.lo, self.lo.lo.lo.hi, self.lo.lo.hi.lo, self.lo.lo.hi.hi,
+      self.lo.hi.lo.lo, self.lo.hi.lo.hi, self.lo.hi.hi.lo, self.lo.hi.hi.hi,
+      self.hi.lo.lo.lo, self.hi.lo.lo.hi, self.hi.lo.hi.lo, self.hi.lo.hi.hi,
+      self.hi.hi.lo.lo, self.hi.hi.lo.hi, self.hi.hi.hi.lo, self.hi.hi.hi.hi
+    )
+  }
+}
+
 /// The `Set1` trait is used to specify broadcasting functionality.
 pub trait Set1<M: Multi> {
 /// Broadcasts `e` to all elements of the vector.
@@ -142,14 +181,14 @@ pub trait Add<M: Multi> {
 
 /// The `Shli` trait is used to specify immediate bit-wise left shift functionality.
 pub trait Shli<M: Multi> {
-/// Shifts all elements in the `m` left by `i` bits.
-  fn shli(&self, m: M, i: i32) -> M;
+/// Shifts all elements in the `a` left by `i` bits.
+  fn shli(&self, a: M, i: i32) -> M;
 }
 
 /// The `Shri` trait is used to specify immediate bit-wise right shift functionality.
 pub trait Shri<M: Multi> {
-/// Shifts all elements in the `m` right by `i` bits.
-  fn shri(&self, M, i32) -> M;
+/// Shifts all elements in the `a` right by `i` bits.
+  fn shri(&self, a: M, i32) -> M;
 }
 
 /// The `Mullo` trait is used to specify low element-wise multiplication functionality.
@@ -162,6 +201,31 @@ pub trait Mullo<M: Multi> {
 pub trait Mulhi<M: Multi> {
 /// Multiplies the elements in `a` and `b` and stores the higher halves of the results.
   fn mulhi(&self, a: M, b: M) -> M;
+}
+
+/// The `Abs` trait is used to specify absolute value computation functionality.
+pub trait Abs<M: Multi> {
+/// Computes the absolute value of the elements in `a`
+  fn abs(&self, a: M) -> M;
+}
+
+/// The `HAdd` trait is used to specify horizontal addition functionality.
+pub trait HAdd<M: Multi> {
+/// Horizontally adds adjacent pairs of elements in `a` and `b`.
+  fn hadd(&self, a: M, b: M) -> M;
+}
+
+/// The `HSub` trait is used to specify horizontal subtraction functionality.
+pub trait HSub<M: Multi> {
+/// Horizontally subtracts adjacent pairs of elements in `a` and `b`.
+  fn hsub(&self, a: M, b: M) -> M;
+}
+
+/// The `Sign` trait is used to specify negation functionality.
+pub trait Sign<M: Multi> {
+/// Negates elements in `a` if the corresponding element in `b` is negative.
+/// Zeroes out the element if the corresponding element in `b` is zero.
+  fn sign(&self, a: M, b: M) -> M;
 }
 
 /// CPU identification and feature detection, as well as trait implementations.

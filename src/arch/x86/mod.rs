@@ -10,4 +10,13 @@ impl SSE2 {
   }
 }
 
+pub struct SSSE3(Token);
+
+impl SSSE3 {
+  pub fn detect() -> Option<SSSE3> {
+    Option::Some(SSSE3(Token::Token))
+  }
+}
+
 pub mod sse2;
+pub mod ssse3;
