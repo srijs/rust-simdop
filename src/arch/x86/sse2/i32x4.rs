@@ -4,6 +4,27 @@ use super::super::super::super::*;
 use super::super::super::super::core::*;
 use super::super::SSE2;
 
+impl CmpEq<M4<i32>> for SSE2 {
+#[inline(always)]
+  fn cmpeq(&self, a: M4<i32>, b: M4<i32>) -> M4<i32> {
+    Multi::wrap(a.unwrap() == b.unwrap())
+  }
+}
+
+impl CmpGt<M4<i32>> for SSE2 {
+#[inline(always)]
+  fn cmpgt(&self, a: M4<i32>, b: M4<i32>) -> M4<i32> {
+    Multi::wrap(a.unwrap() > b.unwrap())
+  }
+}
+
+impl CmpLt<M4<i32>> for SSE2 {
+#[inline(always)]
+  fn cmplt(&self, a: M4<i32>, b: M4<i32>) -> M4<i32> {
+    Multi::wrap(a.unwrap() < b.unwrap())
+  }
+}
+
 impl Set1<M4<i32>> for SSE2 {
 #[inline(always)]
   fn set1(&self, a: i32) -> M4<i32> {

@@ -167,6 +167,24 @@ impl Multi for M16<i8> {
   }
 }
 
+/// The `CmpEq` trait is used to specify equality comparison funtionality.
+pub trait CmpEq<M: Multi> {
+/// Compares elements in `a` and `b` for equality.
+  fn cmpeq(&self, a: M, b: M) -> M;
+}
+
+/// The `CmpGt` trait is used to specify greater-than comparison funtionality.
+pub trait CmpGt<M: Multi> {
+/// Compares elements in `a` and `b` for greater-than.
+  fn cmpgt(&self, a: M, b: M) -> M;
+}
+
+/// The `CmpLt` trait is used to specify less-than comparison funtionality.
+pub trait CmpLt<M: Multi> {
+/// Compares elements in `a` and `b` for less-than.
+  fn cmplt(&self, a: M, b: M) -> M;
+}
+
 /// The `Set1` trait is used to specify broadcasting functionality.
 pub trait Set1<M: Multi> {
 /// Broadcasts `e` to all elements of the vector.
@@ -177,6 +195,12 @@ pub trait Set1<M: Multi> {
 pub trait Add<M: Multi> {
 /// Adds elements in a and b.
   fn add(&self, a: M, b: M) -> M;
+}
+
+/// The `AddS` trait is used to specify element-wise saturated addition functionality.
+pub trait AddS<M: Multi> {
+/// Adds elements in a and b using saturation.
+  fn adds(&self, a: M, b: M) -> M;
 }
 
 /// The `Shli` trait is used to specify immediate bit-wise left shift functionality.

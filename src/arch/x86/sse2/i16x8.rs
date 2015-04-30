@@ -4,6 +4,27 @@ use super::super::super::super::*;
 use super::super::super::super::core::*;
 use super::super::SSE2;
 
+impl CmpEq<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn cmpeq(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    Multi::wrap(a.unwrap() == b.unwrap())
+  }
+}
+
+impl CmpGt<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn cmpgt(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    Multi::wrap(a.unwrap() > b.unwrap())
+  }
+}
+
+impl CmpLt<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn cmplt(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    Multi::wrap(a.unwrap() < b.unwrap())
+  }
+}
+
 impl Set1<M8<i16>> for SSE2 {
 #[inline(always)]
   fn set1(&self, a: i16) -> M8<i16> {
@@ -24,6 +45,15 @@ impl Add<M8<i16>> for SSE2 {
 #[inline(always)]
   fn add(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
     Multi::wrap(a.unwrap() + b.unwrap())
+  }
+}
+
+impl AddS<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn adds(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_padds_w(a.unwrap(), b.unwrap()))
+    }
   }
 }
 
