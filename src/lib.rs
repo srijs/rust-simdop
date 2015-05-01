@@ -36,6 +36,13 @@ pub mod core {
     pub hi: N
   }
 
+  pub trait Multi {
+    type Elem;
+    type Repr;
+    fn wrap(Self::Repr) -> Self;
+    fn unwrap(self) -> Self::Repr;
+  }
+
   pub trait Half {
     type Half;
   }
@@ -44,19 +51,20 @@ pub mod core {
     type Half = N;
   }
 
-  pub trait ElemTwice {
-    type ElemTwice;
+  pub trait Widen {
+    type Widen;
   }
 
-  impl ElemTwice for Twice<Twice<i32>> {
-    type ElemTwice = Twice<i64>;
+  impl<T: Widen> Widen for Twice<T> {
+    type Widen = Twice<T::Widen>;
   }
 
-  pub trait Multi {
-    type Elem;
-    type Repr;
-    fn wrap(Self::Repr) -> Self;
-    fn unwrap(self) -> Self::Repr;
+  impl Widen for Twice<i16> {
+    type Widen = i32;
+  }
+
+  impl Widen for Twice<i32> {
+    type Widen = i64;
   }
 
 }
@@ -201,6 +209,24 @@ pub trait Add<M: Multi> {
 pub trait AddS<M: Multi> {
 /// Adds elements in a and b using saturation.
   fn adds(&self, a: M, b: M) -> M;
+}
+
+/// The `MAdd` trait is used to specify multiply-add functionality.
+pub trait MAdd<M: Multi + Widen> {
+/// Multiplies elements from `a` and `b`, producing intermediate elements of twice the size. Horizontally adds adjacent pairs of intermediate elements.
+  fn madd(&self, a: M, b: M) -> M::Widen;
+}
+
+/// The `Min` trait is used to specify minimum comparison functionality.
+pub trait Min<M: Multi> {
+/// Compares elements in `a` and `b`, and finds the minimum values.
+  fn min(&self, a: M, b: M) -> M;
+}
+
+/// The `Max` trait is used to specify maximum comparison functionality.
+pub trait Max<M: Multi> {
+/// Compares elements in `a` and `b`, and finds the maximum values.
+  fn max(&self, a: M, b: M) -> M;
 }
 
 /// The `Shli` trait is used to specify immediate bit-wise left shift functionality.

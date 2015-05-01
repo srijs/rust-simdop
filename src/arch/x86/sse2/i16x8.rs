@@ -57,6 +57,33 @@ impl AddS<M8<i16>> for SSE2 {
   }
 }
 
+impl MAdd<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn madd(&self, a: M8<i16>, b: M8<i16>) -> M4<i32> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_pmadd_wd(a.unwrap(), b.unwrap()))
+    }
+  }
+}
+
+impl Min<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn min(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_pmins_w(a.unwrap(), b.unwrap()))
+    }
+  }
+}
+
+impl Max<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn max(&self, a: M8<i16>, b: M8<i16>) -> M8<i16> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_pmaxs_w(a.unwrap(), b.unwrap()))
+    }
+  }
+}
+
 impl Shli<M8<i16>> for SSE2 {
 #[inline(always)]
   fn shli(&self, a: M8<i16>, i: i32) -> M8<i16> {
