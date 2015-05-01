@@ -67,6 +67,22 @@ pub mod core {
     type Widen = i64;
   }
 
+  pub trait Narrow {
+    type Narrow;
+  }
+
+  impl<T: Narrow> Narrow for Twice<T> {
+    type Narrow = Twice<T::Narrow>;
+  }
+
+  impl Narrow for Twice<i16> {
+    type Narrow = Twice<Twice<i8>>;
+  }
+
+  impl Narrow for Twice<i32> {
+    type Narrow = Twice<Twice<i16>>;
+  }
+
 }
 
 use self::core::*;
@@ -276,6 +292,18 @@ pub trait Sign<M: Multi> {
 /// Negates elements in `a` if the corresponding element in `b` is negative.
 /// Zeroes out the element if the corresponding element in `b` is zero.
   fn sign(&self, a: M, b: M) -> M;
+}
+
+/// The `PackS` trait is used to specify signed element narrowing functionality.
+pub trait PackS<M: Multi + Narrow> {
+/// Narrows elements from `a` and `b` using signed saturation.
+  fn packs(&self, a: M, b: M) -> M::Narrow;
+}
+
+/// The `PackUS` trait is used to specify unsigned element narrowing functionality.
+pub trait PackUS<M: Multi + Narrow> {
+/// Narrows elements from `a` and `b` using unsigned saturation.
+  fn packus(&self, a: M, b: M) -> M::Narrow;
 }
 
 /// CPU identification and feature detection, as well as trait implementations.

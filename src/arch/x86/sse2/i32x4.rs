@@ -59,3 +59,12 @@ impl Shri<M4<i32>> for SSE2 {
     }
   }
 }
+
+impl PackS<M4<i32>> for SSE2 {
+#[inline(always)]
+  fn packs(&self, a: M4<i32>, b: M4<i32>) -> M8<i16> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_packssdw_128(a.unwrap(), b.unwrap()))
+    }
+  }
+}

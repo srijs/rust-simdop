@@ -117,3 +117,21 @@ impl Mulhi<M8<i16>> for SSE2 {
     }
   }
 }
+
+impl PackS<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn packs(&self, a: M8<i16>, b: M8<i16>) -> M16<i8> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_packsswb_128(a.unwrap(), b.unwrap()))
+    }
+  }
+}
+
+impl PackUS<M8<i16>> for SSE2 {
+#[inline(always)]
+  fn packus(&self, a: M8<i16>, b: M8<i16>) -> M16<i8> {
+    unsafe {
+      Multi::wrap(llvmint::x86::sse2_packuswb_128(a.unwrap(), b.unwrap()))
+    }
+  }
+}
