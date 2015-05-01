@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["sse2",""]],"struct":[["SSE2",""]]});
+initSidebarItems({"mod":[["sse2",""],["ssse3",""]],"struct":[["SSE2",""],["SSSE3",""]]});

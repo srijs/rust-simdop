@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["i16x8",""],["i32x4",""],["i64x2",""]]});
+initSidebarItems({"mod":[["i16x8",""],["i32x4",""],["i64x2",""],["i8x16",""]]});

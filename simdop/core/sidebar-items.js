@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Twice",""]],"trait":[["ElemTwice",""],["Half",""],["Multi",""]]});
+initSidebarItems({"struct":[["Twice",""]],"trait":[["Half",""],["Multi",""],["Narrow",""],["Widen",""]]});

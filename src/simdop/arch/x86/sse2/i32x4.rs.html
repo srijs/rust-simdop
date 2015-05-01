@@ -97,27 +97,44 @@
 <span id="55">55</span>
 <span id="56">56</span>
 <span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
 </pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>simdty</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>llvmint</span>;
 
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>core</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>SSE2</span>;
 
-<span class='kw'>impl</span> <span class='ident'>Multi</span> <span class='kw'>for</span> <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
-  <span class='kw'>type</span> <span class='ident'>Elem</span> <span class='op'>=</span> <span class='ident'>i32</span>;
-  <span class='kw'>type</span> <span class='ident'>Repr</span> <span class='op'>=</span> <span class='ident'>simdty</span>::<span class='ident'>i32x4</span>;
+<span class='kw'>impl</span> <span class='ident'>CmpEq</span><span class='op'>&lt;</span><span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>SSE2</span> {
 <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-  <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>s</span>: <span class='ident'>Self</span>::<span class='ident'>Repr</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-    <span class='ident'>Twice</span>{
-      <span class='ident'>lo</span>: <span class='ident'>Twice</span>{<span class='ident'>lo</span>: <span class='ident'>s</span>.<span class='number'>0</span>, <span class='ident'>hi</span>: <span class='ident'>s</span>.<span class='number'>1</span>},
-      <span class='ident'>hi</span>: <span class='ident'>Twice</span>{<span class='ident'>lo</span>: <span class='ident'>s</span>.<span class='number'>2</span>, <span class='ident'>hi</span>: <span class='ident'>s</span>.<span class='number'>3</span>}
-    }
+  <span class='kw'>fn</span> <span class='ident'>cmpeq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>a</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
+    <span class='ident'>Multi</span>::<span class='ident'>wrap</span>(<span class='ident'>a</span>.<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='ident'>b</span>.<span class='ident'>unwrap</span>())
   }
+}
+
+<span class='kw'>impl</span> <span class='ident'>CmpGt</span><span class='op'>&lt;</span><span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>SSE2</span> {
 <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-  <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Repr</span> {
-    <span class='ident'>simdty</span>::<span class='ident'>i32x4</span>(<span class='self'>self</span>.<span class='ident'>lo</span>.<span class='ident'>lo</span>, <span class='self'>self</span>.<span class='ident'>lo</span>.<span class='ident'>hi</span>, <span class='self'>self</span>.<span class='ident'>hi</span>.<span class='ident'>lo</span>, <span class='self'>self</span>.<span class='ident'>hi</span>.<span class='ident'>hi</span>)
+  <span class='kw'>fn</span> <span class='ident'>cmpgt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>a</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
+    <span class='ident'>Multi</span>::<span class='ident'>wrap</span>(<span class='ident'>a</span>.<span class='ident'>unwrap</span>() <span class='op'>&gt;</span> <span class='ident'>b</span>.<span class='ident'>unwrap</span>())
+  }
+}
+
+<span class='kw'>impl</span> <span class='ident'>CmpLt</span><span class='op'>&lt;</span><span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>SSE2</span> {
+<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
+  <span class='kw'>fn</span> <span class='ident'>cmplt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>a</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
+    <span class='ident'>Multi</span>::<span class='ident'>wrap</span>(<span class='ident'>a</span>.<span class='ident'>unwrap</span>() <span class='op'>&lt;</span> <span class='ident'>b</span>.<span class='ident'>unwrap</span>())
   }
 }
 
@@ -152,6 +169,15 @@
   <span class='kw'>fn</span> <span class='ident'>shri</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>a</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>i</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
     <span class='kw'>unsafe</span> {
       <span class='ident'>Multi</span>::<span class='ident'>wrap</span>(<span class='ident'>llvmint</span>::<span class='ident'>x86</span>::<span class='ident'>sse2_psrli_d</span>(<span class='ident'>a</span>.<span class='ident'>unwrap</span>(), <span class='ident'>i</span>))
+    }
+  }
+}
+
+<span class='kw'>impl</span> <span class='ident'>PackS</span><span class='op'>&lt;</span><span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>SSE2</span> {
+<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
+  <span class='kw'>fn</span> <span class='ident'>packs</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>a</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='ident'>M4</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>M8</span><span class='op'>&lt;</span><span class='ident'>i16</span><span class='op'>&gt;</span> {
+    <span class='kw'>unsafe</span> {
+      <span class='ident'>Multi</span>::<span class='ident'>wrap</span>(<span class='ident'>llvmint</span>::<span class='ident'>x86</span>::<span class='ident'>sse2_packssdw_128</span>(<span class='ident'>a</span>.<span class='ident'>unwrap</span>(), <span class='ident'>b</span>.<span class='ident'>unwrap</span>()))
     }
   }
 }

@@ -77,40 +77,12 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
 </pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>simdty</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>llvmint</span>;
 
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>SSE2</span>;
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>super</span>::<span class='ident'>core</span>::<span class='op'>*</span>;
-
-<span class='kw'>impl</span> <span class='ident'>Multi</span> <span class='kw'>for</span> <span class='ident'>M2</span><span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;</span> {
-  <span class='kw'>type</span> <span class='ident'>Elem</span> <span class='op'>=</span> <span class='ident'>i64</span>;
-  <span class='kw'>type</span> <span class='ident'>Repr</span> <span class='op'>=</span> <span class='ident'>simdty</span>::<span class='ident'>i64x2</span>;
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-  <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>s</span>: <span class='ident'>Self</span>::<span class='ident'>Repr</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-    <span class='ident'>Twice</span>{<span class='ident'>lo</span>: <span class='ident'>s</span>.<span class='number'>0</span>, <span class='ident'>hi</span>: <span class='ident'>s</span>.<span class='number'>1</span>}
-  }
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-  <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Repr</span> {
-    <span class='ident'>simdty</span>::<span class='ident'>i64x2</span>(<span class='self'>self</span>.<span class='ident'>lo</span>, <span class='self'>self</span>.<span class='ident'>hi</span>)
-  }
-}
 
 <span class='kw'>impl</span> <span class='ident'>Set1</span><span class='op'>&lt;</span><span class='ident'>M2</span><span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>SSE2</span> {
 <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>

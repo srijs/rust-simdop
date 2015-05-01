@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["x86",""]],"struct":[["X86",""]]});
+initSidebarItems({"mod":[["x86",""]]});
