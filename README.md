@@ -1,4 +1,4 @@
-# A Library for Safe SIMD Operations
+# A Library for Safe SIMD Operations [![Build Status](https://travis-ci.org/srijs/rust-simdop.svg?branch=master)](https://travis-ci.org/srijs/rust-simdop)
 
 The `simdop` library provides SIMD functionality
 for building applications using fast operations
