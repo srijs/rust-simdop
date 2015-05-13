@@ -31,6 +31,7 @@ extern crate simdty;
 pub mod core {
 
   #[derive(Debug, Copy, Clone)]
+  #[repr(C, packed)]
   pub struct Twice<N> {
     pub lo: N,
     pub hi: N
@@ -85,6 +86,7 @@ pub mod core {
 
 }
 
+use std::mem;
 use self::core::*;
 
 /// A vector of 2 elements of type `N`.
@@ -98,98 +100,27 @@ pub type M16<N> = Twice<M8<N>>;
 /// A vector of 32 elements of type `N`.
 pub type M32<N> = Twice<M16<N>>;
 
-impl Multi for M2<i64> {
-  type Elem = i64;
-  type Repr = simdty::i64x2;
+macro_rules! multi {
+  ($m:ty, $e:ty, $r:ty) => {
+    impl Multi for $m {
+      type Elem = $e;
+      type Repr = $r;
 #[inline(always)]
-  fn wrap(s: Self::Repr) -> Self {
-    Twice{lo: s.0, hi: s.1}
-  }
+      fn wrap(s: Self::Repr) -> Self {
+        unsafe { mem::transmute(s) }
+      }
 #[inline(always)]
-  fn unwrap(self) -> Self::Repr {
-    simdty::i64x2(self.lo, self.hi)
-  }
-}
-
-impl Multi for M4<i32> {
-  type Elem = i32;
-  type Repr = simdty::i32x4;
-#[inline(always)]
-  fn wrap(s: Self::Repr) -> Self {
-    Twice{
-      lo: Twice{lo: s.0, hi: s.1},
-      hi: Twice{lo: s.2, hi: s.3}
-    }
-  }
-#[inline(always)]
-  fn unwrap(self) -> Self::Repr {
-    simdty::i32x4(self.lo.lo, self.lo.hi, self.hi.lo, self.hi.hi)
-  }
-}
-
-impl Multi for M8<i16> {
-  type Elem = i16;
-  type Repr = simdty::i16x8;
-#[inline(always)]
-  fn wrap(s: Self::Repr) -> Self {
-    Twice{
-      lo: Twice{
-        lo: Twice{lo: s.0, hi: s.1},
-        hi: Twice{lo: s.2, hi: s.3},
-      },
-      hi: Twice{
-        lo: Twice{lo: s.4, hi: s.5},
-        hi: Twice{lo: s.6, hi: s.7}
+      fn unwrap(self) -> Self::Repr {
+        unsafe { mem::transmute(self) }
       }
     }
   }
-#[inline(always)]
-  fn unwrap(self) -> Self::Repr {
-    simdty::i16x8(
-      self.lo.lo.lo, self.lo.lo.hi, self.lo.hi.lo, self.lo.hi.hi,
-      self.hi.lo.lo, self.hi.lo.hi, self.hi.hi.lo, self.hi.hi.hi
-    )
-  }
 }
 
-impl Multi for M16<i8> {
-  type Elem = i8;
-  type Repr = simdty::i8x16;
-#[inline(always)]
-  fn wrap(s: Self::Repr) -> Self {
-    Twice{
-      lo: Twice{
-        lo: Twice{
-          lo: Twice{lo: s.0, hi: s.1},
-          hi: Twice{lo: s.2, hi: s.3},
-        },
-        hi: Twice{
-          lo: Twice{lo: s.4, hi: s.5},
-          hi: Twice{lo: s.6, hi: s.7},
-        }
-      },
-      hi: Twice{
-        lo: Twice{
-          lo: Twice{lo: s.8, hi: s.9},
-          hi: Twice{lo: s.10, hi: s.11}
-        },
-        hi: Twice{
-          lo: Twice{lo: s.12, hi: s.13},
-          hi: Twice{lo: s.14, hi: s.15}
-        }
-      }
-    }
-  }
-#[inline(always)]
-  fn unwrap(self) -> Self::Repr {
-    simdty::i8x16(
-      self.lo.lo.lo.lo, self.lo.lo.lo.hi, self.lo.lo.hi.lo, self.lo.lo.hi.hi,
-      self.lo.hi.lo.lo, self.lo.hi.lo.hi, self.lo.hi.hi.lo, self.lo.hi.hi.hi,
-      self.hi.lo.lo.lo, self.hi.lo.lo.hi, self.hi.lo.hi.lo, self.hi.lo.hi.hi,
-      self.hi.hi.lo.lo, self.hi.hi.lo.hi, self.hi.hi.hi.lo, self.hi.hi.hi.hi
-    )
-  }
-}
+multi!(M2<i64>, i64, simdty::i64x2);
+multi!(M4<i32>, i32, simdty::i32x4);
+multi!(M8<i16>, i16, simdty::i16x8);
+multi!(M16<i8>,  i8, simdty::i8x16);
 
 /// The `CmpEq` trait is used to specify equality comparison funtionality.
 pub trait CmpEq<M: Multi> {
