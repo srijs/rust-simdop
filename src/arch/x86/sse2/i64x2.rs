@@ -7,7 +7,7 @@ use super::super::super::super::core::*;
 impl Set1<M2<i64>> for SSE2 {
 #[inline(always)]
   fn set1(&self, a: i64) -> M2<i64> {
-    Twice{lo: a, hi: a}
+    mvec![a,a]
   }
 }
 

@@ -28,16 +28,7 @@ impl CmpLt<M8<i16>> for SSE2 {
 impl Set1<M8<i16>> for SSE2 {
 #[inline(always)]
   fn set1(&self, a: i16) -> M8<i16> {
-    Twice{
-      lo: Twice{
-        lo: Twice{lo: a, hi: a},
-        hi: Twice{lo: a, hi: a}
-      },
-      hi: Twice{
-        lo: Twice{lo: a, hi: a},
-        hi: Twice{lo: a, hi: a}
-      }
-    }
+    mvec![a,a,a,a,a,a,a,a]
   }
 }
 

@@ -28,10 +28,7 @@ impl CmpLt<M4<i32>> for SSE2 {
 impl Set1<M4<i32>> for SSE2 {
 #[inline(always)]
   fn set1(&self, a: i32) -> M4<i32> {
-    Twice{
-      lo: Twice{lo: a, hi: a},
-      hi: Twice{lo: a, hi: a}
-    }
+    mvec![a,a,a,a]
   }
 }
 

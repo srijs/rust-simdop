@@ -40,8 +40,11 @@ pub mod core {
   pub trait Multi {
     type Elem;
     type Repr;
+    type Array;
     fn wrap(Self::Repr) -> Self;
     fn unwrap(self) -> Self::Repr;
+    fn serialize(self) -> Self::Array;
+    fn unserialize(Self::Array) -> Self;
   }
 
   pub trait Half {
@@ -101,10 +104,11 @@ pub type M16<N> = Twice<M8<N>>;
 pub type M32<N> = Twice<M16<N>>;
 
 macro_rules! multi {
-  ($m:ty, $e:ty, $r:ty) => {
+  ($m:ty, $e:ty, $r:ty, $a:ty) => {
     impl Multi for $m {
       type Elem = $e;
       type Repr = $r;
+      type Array = $a;
 #[inline(always)]
       fn wrap(s: Self::Repr) -> Self {
         unsafe { mem::transmute(s) }
@@ -113,14 +117,29 @@ macro_rules! multi {
       fn unwrap(self) -> Self::Repr {
         unsafe { mem::transmute(self) }
       }
+#[inline(always)]
+      fn unserialize(s: Self::Array) -> Self {
+        unsafe { mem::transmute(s) }
+      }
+#[inline(always)]
+      fn serialize(self) -> Self::Array {
+        unsafe { mem::transmute(self) }
+      }
     }
   }
 }
 
-multi!(M2<i64>, i64, simdty::i64x2);
-multi!(M4<i32>, i32, simdty::i32x4);
-multi!(M8<i16>, i16, simdty::i16x8);
-multi!(M16<i8>,  i8, simdty::i8x16);
+multi!(M2<i64>, i64, simdty::i64x2, [i64;2]);
+multi!(M4<i32>, i32, simdty::i32x4, [i32;4]);
+multi!(M8<i16>, i16, simdty::i16x8, [i16;8]);
+multi!(M16<i8>,  i8, simdty::i8x16, [i8;16]);
+
+#[macro_export]
+macro_rules! mvec {
+  ($($y:expr),*) => {
+    $crate::core::Multi::unserialize([$($y),*])
+  };
+}
 
 /// The `CmpEq` trait is used to specify equality comparison funtionality.
 pub trait CmpEq<M: Multi> {
