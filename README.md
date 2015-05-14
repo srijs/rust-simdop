@@ -18,9 +18,10 @@ to the operations in the detected feature set in the form of trait implementatio
 Since the number of elements in a vector is always a power of two,
 vectors are represented as a perfect binary tree, which encodes the length
 of the vector as a logarithm in the height of the tree.
-This makes structural modifications very easy, while providing strong type guarantees,
-e.g. when splitting or joining vectors.
+Elements are layed out as leaves in depth-first traversal order.
+This construction makes structural modifications very easy,
+while providing strong type guarantees, e.g. when splitting or joining vectors.
 
 To perform SIMD operation, the tree is flattened into an array, and restored afterwards.
-When combining vector operations, the compiler is able to perform "deforestation"
-optimisations on the data structures, elminating most of the structural overhead. 
+Because the data layout of the elements is equivalent for the tree and the array
+representations, this can be done without any overhead.
